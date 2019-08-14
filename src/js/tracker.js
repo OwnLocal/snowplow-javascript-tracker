@@ -79,13 +79,14 @@
 	 * 15. eventMethod, 'post'
 	 * 16. post, false *DEPRECATED use eventMethod instead*
 	 * 17. postPath, null
-	 * 18. useStm, true
-	 * 19. bufferSize, 1
-	 * 20. crossDomainLinker, false
-	 * 21. maxPostBytes, 40000
-	 * 22. discoverRootDomain, false
-	 * 23. cookieLifetime, 63072000
-	 * 24. stateStorageStrategy, 'cookieAndLocalStorage'
+	 * 18. customPath, null
+	 * 19. useStm, true
+	 * 20. bufferSize, 1
+	 * 21. crossDomainLinker, false
+	 * 22. maxPostBytes, 40000
+	 * 23. discoverRootDomain, false
+	 * 24. cookieLifetime, 63072000
+	 * 25. stateStorageStrategy, 'cookieAndLocalStorage'
 	 */
 	object.Tracker = function Tracker(functionName, namespace, version, mutSnowplowState, argmap) {
 
@@ -155,6 +156,9 @@
 
 			// Custom path for post requests (to get around adblockers)
 			configPostPath = argmap.hasOwnProperty('postPath') ? argmap.postPath : '/com.snowplowanalytics.snowplow/tp2',
+
+			// Custom path for sending events
+			configCustomPath = argmap.hasOwnProperty('customPath') ? argmap.customPath : null,
 
 			// Site ID
 			configTrackerSiteId = argmap.hasOwnProperty('appId') ? argmap.appId : '', // Updated for Snowplow
@@ -317,6 +321,7 @@
 					configStateStorageStrategy == 'cookieAndLocalStorage',
 				argmap.eventMethod,
 				configPostPath,
+				configCustomPath,
 				argmap.bufferSize,
 				argmap.maxPostBytes || 40000,
 				argmap.useStm),
@@ -450,7 +455,7 @@
 
 			if (configDiscardBrace) {
 				targetPattern = new RegExp('[{}]', 'g');
-				url = url.replace(targetPattern, ''); 
+				url = url.replace(targetPattern, '');
 			}
 			return url;
 		}
